@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <meta charset="UTF-8">
+    <title>CSV</title>
+    <style>
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  position: relative;
+  width: 960px;
+}
+
+.axis text {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.bar {
+  fill: steelblue;
+  fill-opacity: 1;
+}
+
+.bar:hover {
+  fill: orange;
+}
+
+label {
+  position: absolute;
+  top: 10px;
+  right: 11px;
+}
+
+
+    </style>
+</head>
+<body>
+<form id="frm1">
+    CSV source: <input type="text">
+</form>
+<input type="button" value="Submit" onclick="getSource()"><br>
+
+<script src="JavaScript.js"></script>
+
+</body>
+</html>
