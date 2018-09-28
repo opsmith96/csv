@@ -8,12 +8,14 @@ function getSource() {
         text += x.elements[i].value;
     }
 
-d3.csv(text,function (data) {
+d3.csv(text,function(data) {
 // CSV section
+    for(i = 0; i < data.length ;i++){
+
+    }
+
   var body = d3.select('body')
   var selectData = d3.keys(data[0]);
-
-    console.log(selectData);
 
   // Select X-axis Variable
   var span = body.append('span')
@@ -25,7 +27,9 @@ d3.csv(text,function (data) {
       .data(selectData)
       .enter()
     .append('option')
-      .attr('value', function (d) { return d })
+      .attr('value', function (d) {
+       return d
+       })
       .text(function (d) { return d ;})
   body.append('br')
 
@@ -51,14 +55,16 @@ d3.csv(text,function (data) {
   var w = 700 - margin.left - margin.right
   var formatPercent = d3.format('1')
   // Scales
-  var colorScale = d3.scale.linear().domain([1,length])
-                         .interpolate(d3.interpolateHcl)
-                         .range([d3.rgb("#007AFF"), d3.rgb('#FFF500')]);
+  var colorScale = d3.scale.linear().domain([1,length]);
 
   var xScale = d3.scale.linear()
-    .domain([
-      d3.min([0,d3.min(data,function (d) { return d })]),
-      d3.max([0,d3.max(data,function (d) { return d })])
+   .domain([
+      d3.min([0,d3.min(data,function (d) {
+        return d;
+      })]),
+      d3.max([0,d3.max(data,function (d) {
+        return d;
+       })])
       ])
     .range([0,w])
   var yScale = d3.scale.linear()
@@ -91,7 +97,10 @@ d3.csv(text,function (data) {
       .data(data)
       .enter()
     .append('circle')
-      .attr('cx',function (d) { return xScale(d) })
+      .attr('cx',function (d) {
+      return xScale(d)
+
+       })
       .attr('cy',function (d) { return yScale(d) })
       .attr('r','10')
       .attr('stroke','black')
@@ -158,12 +167,13 @@ d3.csv(text,function (data) {
       .text(value)    
     d3.selectAll('circle') // move the circles
       .transition().duration(1000)
-      .delay(function (d,i) { return i*10})
-        .attr('cy',function (d) { return yScale(d[value]) })
+      .delay(function (d,i) { return i*5})
+      .attr('cy',function (d) { return yScale(d[value])})
   }
 
   function xChange() {
     var value = this.value // get the new x value
+    //console.log(value);
     xScale // change the xScale
       .domain([
         d3.min([0,d3.min(data,function (d) { return d[value] })]),
@@ -178,7 +188,7 @@ d3.csv(text,function (data) {
       .text(value)
     d3.selectAll('circle') // move the circles
       .transition().duration(1000)
-      .delay(function (d,i) { return i*10})
+      .delay(function (d,i) { return i*5})
         .attr('cx',function (d) { return xScale(d[value]) })
   }
 })
