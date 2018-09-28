@@ -4,16 +4,23 @@ function getSource() {
     var x = document.getElementById("frm1");
     var text = "";
     var i;
+    let selectedTextColumn;
     for (i = 0; i < x.length ;i++) {
         text += x.elements[i].value;
     }
 
 d3.csv(text,function (data) {
+
+  textVariables = [];
+
+Object.entries(data[0]).forEach(column => {
+  if (isNaN(column[1]))
+  textVariables.push(column[0]);
+})
+
 // CSV section
   var body = d3.select('body')
   var selectData = d3.keys(data[0]);
-
-    console.log(selectData);
 
   // Select X-axis Variable
   var span = body.append('span')
@@ -26,7 +33,7 @@ d3.csv(text,function (data) {
       .enter()
     .append('option')
       .attr('value', function (d) { return d })
-      .text(function (d) { return d ;})
+      .text(function (d) { return d })
   body.append('br')
 
 
@@ -54,6 +61,47 @@ d3.csv(text,function (data) {
   var colorScale = d3.scale.linear().domain([1,length])
                          .interpolate(d3.interpolateHcl)
                          .range([d3.rgb("#007AFF"), d3.rgb('#FFF500')]);
+
+  generateUniqueValues = (input) => {
+    uniqueValues = [];
+    data.forEach(object => {
+      if (!uniqueValues.includes(object[input]))
+        uniqueValues.push(object[input]);
+    });
+    return uniqueValues;
+  }
+
+  getColourArray = (input) => {
+    colourArray = [];
+    for (let index = 0; index < input.length; index++) {
+      colourArray.push('#'+Math.random().toString(16).substr(-6));
+    }
+    return colourArray;
+  }
+
+  let variations = generateUniqueValues(textVariables[0]);
+  console.log(variations,'variations');
+
+  let colors = getColourArray(variations);
+  console.log(colors);
+
+
+  colorScale = (circle) => {
+    if (selectedTextColumn != textVariables)
+      {
+        selectedTextColumn = textVariables;
+        colors = getColourArray(variations);
+      }
+
+      return colors[variations.indexOf(circle[textVariables[0]])];
+
+    let hexValue = colourArray[variations.indexOf(circle[textVariables[0]])];
+    return '#'+((1<24)*Math.random()|0).toString(16);
+    if (circle[textVariables[0]] == 'setosa')
+      return 'red';
+    else return 'blue';
+  }
+
 
   var xScale = d3.scale.linear()
     .domain([
@@ -94,9 +142,10 @@ d3.csv(text,function (data) {
       .attr('cx',function (d) { return xScale(d) })
       .attr('cy',function (d) { return yScale(d) })
       .attr('r','10')
+      .attr("data-legend",function(d) { return d.name})
       .attr('stroke','black')
       .attr('stroke-width',1)
-      .attr('fill',function (d,i) { return colorScale(i) })
+      .attr('fill',function (d) { return colorScale(d) })
       .on('mouseover', function (d) {
         d3.select(this)
           .transition()
@@ -181,5 +230,6 @@ d3.csv(text,function (data) {
       .delay(function (d,i) { return i*10})
         .attr('cx',function (d) { return xScale(d[value]) })
   }
+  
 })
 }
